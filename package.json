@@ -1,0 +1,37 @@
+{
+  "name": "ableton-midi-to-buttplug",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env LEVEL=debug NODE_ENV=development tsx --watch src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "@types/midi": "^2.0.3",
+    "@types/ws": "^8.18.1",
+    "ableton-js": "^3.6.1",
+    "buttplug": "^3.2.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
+    "midi": "^2.0.0",
+    "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.15.18",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild",
+      "midi"
+    ]
+  }
+}

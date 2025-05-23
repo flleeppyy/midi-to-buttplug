@@ -1,0 +1,27 @@
+{
+	"compilerOptions": {
+
+		// Treat files as modules even if it doesn't use import/export
+		"moduleDetection": "force",
+
+		// Ignore module structure
+		"module": "Preserve",
+
+		// Allow JSON modules to be imported
+		"resolveJsonModule": true,
+    "resolvePackageJsonImports": true,
+    "resolvePackageJsonExports": true,
+
+		// Allow JS files to be imported from TS and vice versa
+		"allowJs": true,
+
+		// Use correct ESM import behavior
+		"esModuleInterop": true,
+
+		// Disallow features that require cross-file awareness
+		"isolatedModules": true,
+    "lib": ["ES2024"],
+    "target": "ESNext",
+    "typeRoots": ["./src/typings", "./node_modules/@types"],
+	},
+}
