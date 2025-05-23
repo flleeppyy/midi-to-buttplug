@@ -43,7 +43,7 @@ const reconnectBp = async () => {
 };
 reconnectBp();
 
-const activeNotes = new Set();
+const activeNotes = new Map();
 
 input.on("message", async (deltaTime, message) => {
   if (!Array.isArray(message) || message.length < 3) {
@@ -58,7 +58,6 @@ input.on("message", async (deltaTime, message) => {
   try {
     const noteKey = getNoteKey(channel, note);
     const scaledVelocity = scaleVelocity(velocity);
-    console.log(velocity, scaledVelocity);
 
     if (!bpClient?.devices || bpClient.devices.length === 0) {
       console.warn("No connected devices.");
@@ -66,19 +65,24 @@ input.on("message", async (deltaTime, message) => {
     }
 
     if (isNoteOff(command, velocity)) {
-      activeNotes.delete(noteKey);
-
-      if (activeNotes.size === 0) {
-        console.log("Stopping devices");
-        for (const d of bpClient.devices)
-          await d.stop();
+      const device = activeNotes.get(noteKey);
+      if (device) {
+        await device.stop();
+        activeNotes.delete(noteKey);
       }
     } else if (command === 9 && velocity > 0) {
-      activeNotes.add(noteKey);
+      if (!activeNotes.has(noteKey)) {
+        const usedDevices = new Set(activeNotes.values());
+        const freeDevice = bpClient.devices.find(d => !usedDevices.has(d));
 
-      console.log(`Starting devices with velocity ${scaledVelocity}`);
-      for (const d of bpClient.devices)
-        await d.vibrate(scaledVelocity);
+        if (freeDevice) {
+          await freeDevice.vibrate(scaledVelocity);
+          activeNotes.set(noteKey, freeDevice);
+          console.log(`Note ${noteKey} assigned to device ${freeDevice.displayName}.`);
+        } else {
+          console.warn("All devices in use.");
+        }
+      }
     }
   } catch (error) {
     console.error("Error handling MIDI message:", error);
